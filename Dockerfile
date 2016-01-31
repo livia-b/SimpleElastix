@@ -35,6 +35,7 @@ WORKDIR /home/itkuser/
 COPY . $HOME
 RUN  /usr/bin/expect -f $HOME/SuperBuild/acceptElastixCertificate 
 RUN mkdir -p $HOME/build/SimpleElastix
+WORKDIR /home/itkuser/build/SimpleElastix
 
 RUN  mkdir -p statismo-prefix && \ 
     git clone -b develop  https://github.com/statismo/statismo statismo-prefix/src && \
