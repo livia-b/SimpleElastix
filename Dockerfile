@@ -8,7 +8,14 @@ RUN apt-get update && apt-get install -y \
   cmake \
   expect \
   git \
+  libboost-date-time-dev \
+  libboost-dev \
+  libboost-filesystem-dev \
+  libboost-program-options-dev \
+  libboost-system-dev \
+  libboost-thread-dev \
   libeigen3-dev \
+  libhdf5-dev \
   libncurses-dev \
   python-dev \
   subversion \
@@ -21,23 +28,24 @@ RUN echo 'root:itk' | chpasswd
 RUN echo 'itkuser:itk' | chpasswd
 ENV HOME /home/itkuser
 USER itkuser
-WORKDIR /home/itkuser
+WORKDIR /home/itkuser/
 
 
+# I need an expired certificate http://stackoverflow.com/a/27647891/1136458
+COPY . $HOME
+RUN  /usr/bin/expect -f $HOME/SuperBuild/acceptElastixCertificate 
+RUN mkdir -p $HOME/build/SimpleElastix
+
+RUN  mkdir -p statismo-prefix && \ 
+    git clone -b develop  https://github.com/statismo/statismo statismo-prefix/src && \
+    git clone https://github.com/statismo/statismo-elastix statismo-prefix/elastix 
+    
 #http://simpleelastix.readthedocs.org/GettingStarted.html
 #http://zarquon42b.github.io/2015/11/19/SimpleElastix/
-
-RUN mkdir $HOME/src && \
-    cd src && \
-    git clone https://github.com/livia-b/SimpleElastix && \
-    git clone  https://github.com/statismo/statismo-elastix && \
-    git clone  https://github.com/statismo/statismo && \
-    for PACKAGE in SimpleElastix statismo; do mkdir -p $HOME/build/$PACKAGE; done  
-     
-COPY SuperBuild/External_Elastix.cmake $HOME/src/SimpleElastix/SuperBuild
      
 WORKDIR $HOME/build/SimpleElastix
-RUN cmake $HOME/src/SimpleElastix/SuperBuild \
+#let SimpleElastix superbuild take care of ITK config and dependencies
+RUN cmake $HOME/SuperBuild \
    		-DBUILD_EXAMPLES=OFF \
    		-DBUILD_TESTING=OFF \
    		-DUSE_SYSTEM_SWIG=ON \
@@ -46,23 +54,22 @@ RUN cmake $HOME/src/SimpleElastix/SuperBuild \
    		-DWRAP_LUA=OFF \
    		-DWRAP_PYTHON=ON \
    		-DWRAP_RUBY=OFF \
-   		-DWRAP_TCL=OFF 
-   		
-COPY SuperBuild/acceptElastixCertificate $HOME
-RUN  /usr/bin/expect -f $HOME/acceptElastixCertificate 
+   		-DWRAP_TCL=OFF \
+   		-DCMAKE_BUILD_TYPE=Release \
+   		-DELASTIX_USER_COMPONENT_DIRS=$HOME/build/SimpleElastix/statismo-prefix/elastix
    		
 RUN  make -j$(grep -c processor /proc/cpuinfo) ITK
 
-RUN cd $HOME/build/statismo && \
-    cmake $HOME/src/statismo \
-        -DITK_DIR=$HOME/build/SimpleElastix/ITK-build \
-        -DEIGEN3_INCLUDE_DIR:PATH=/usr/include/eigen3 \
-        -DVTK_SUPPORT=OFF && \
-        make -j$(grep -c processor /proc/cpuinfo) 
+RUN  mkdir -p  statismo-build && \
+    cd  statismo-build && \
+    cmake ../statismo-prefix/src \ 
+   		-DCMAKE_BUILD_TYPE=Release \
+        -DITK_DIR:PATH=$HOME/build/SimpleElastix/ITK-build \
+        -DVTK_SUPPORT:BOOL=OFF  \
+        -DBUILD_EXAMPLES:BOOL=OFF  \
+        -DBUILD_CLI_TOOLS:BOOL=ON && \
+    make -j$(grep -c processor /proc/cpuinfo) 
 
-
-RUN cd $HOME/build/elastix-build && 
-	cmake -DELASTIX_USER_COMPONENT_DIRS=$HOME/src/statismo-elastix
 	
 RUN make -j$(grep -c processor /proc/cpuinfo) 
 

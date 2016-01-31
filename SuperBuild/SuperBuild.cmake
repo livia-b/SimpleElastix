@@ -297,6 +297,8 @@ else()
   include(External_Elastix)
   list(APPEND ${CMAKE_PROJECT_NAME}_DEPENDENCIES elastix)
 endif()
+set(ELASTIX_USER_COMPONENT_DIRS "" CACHE PATH "ELASTIX_USER_COMPONENT_DIRS" )
+
 
 #------------------------------------------------------------------------------
 # SimpleITK
@@ -345,6 +347,7 @@ ExternalProject_Add(${proj}
     -DITK_DIR:PATH=${ITK_DIR}
     # Elastix
     -DELASTIX_USE_FILE:PATH=${ELASTIX_USE_FILE}
+    -DELASTIX_USER_COMPONENT_DIRS:PATH=${ELASTIX_USER_COMPONENT_DIRS}
     # Swig
     -DSWIG_DIR:PATH=${SWIG_DIR}
     -DSWIG_EXECUTABLE:PATH=${SWIG_EXECUTABLE}
