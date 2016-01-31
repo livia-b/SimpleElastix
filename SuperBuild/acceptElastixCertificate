@@ -1,0 +1,11 @@
+#!/usr/bin/expect -f
+
+spawn svn list --username elastixguest --password elastixguest https://svn.bigr.nl/elastix/tagspublic 
+expect "(R)eject, accept (t)emporarily or accept (p)ermanently? "
+send -- "p\r"
+expect "Store password unencrypted (yes/no)? "
+send "no\r"
+expect -re "root@.*:\/#"
+
+
+
