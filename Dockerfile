@@ -61,14 +61,15 @@ RUN cmake $HOME/SuperBuild \
    		
 RUN  make -j$(grep -c processor /proc/cpuinfo) ITK
 
-RUN  mkdir -p  statismo-build && \
-    cd  statismo-build && \
-    cmake ../statismo-prefix/src/superbuild \ 
-   		-DCMAKE_BUILD_TYPE:STRING=Release \
-	    -DMINIMAL_STATISMO_BUILD:BOOL=ON \
-	    -DITK_DIR=$HOME/build/SimpleElastix/ITK-prefix/build
-        
-#RUN cd  statismo-build && make -j$(grep -c processor /proc/cpuinfo) 
+RUN mkdir -p  statismo-build && \
+    cd statismo-build && \
+    cmake ../../statismo-prefix/src \
+     -DBUILD_EXAMPLES=OFF \
+     -DBUILD_TESTING=OFF \
+     -DVTK_SUPPORT=ON \
+     -DITK_DIR=$HOME/build/SimpleElastix/ITK-build \
+     -DVTK_SUPPORT=OFF && \
+     make  -j$(grep -c processor /proc/cpuinfo) 
 
-#RUN make -j$(grep -c processor /proc/cpuinfo) 
+RUN make -j$(grep -c processor /proc/cpuinfo) 
 
