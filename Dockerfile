@@ -70,7 +70,7 @@
 #     -DITK_DIR=$HOME/build/SimpleElastix/ITK-build \
 #     -DVTK_SUPPORT=OFF 
 #RUN   cd statismo-build && \  
-	make  -j$(grep -c processor /proc/cpuinfo) 
+#	make  -j$(grep -c processor /proc/cpuinfo) 
    
 #using sockerhub for caching
 FROM liviabarazzetti/simpleelastix:StatismoConfig  
