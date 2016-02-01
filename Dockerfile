@@ -69,20 +69,21 @@
 #     -DVTK_SUPPORT=ON \
 #     -DITK_DIR=$HOME/build/SimpleElastix/ITK-build \
 #     -DVTK_SUPPORT=OFF 
-#
+#RUN   cd statismo-build && \  
+	make  -j$(grep -c processor /proc/cpuinfo) 
    
 #using sockerhub for caching
 FROM liviabarazzetti/simpleelastix:StatismoConfig  
-RUN   cd statismo-build && \  
-	make  -j$(grep -c processor /proc/cpuinfo) 
 
-RUN make -j$(grep -c processor /proc/cpuinfo) 
+
+RUN make -j$(grep -c processor /proc/cpuinfo) elastix
 RUN cd elastix-build && \
    cmake \
      -Dstatismo_DIR=$HOME/build/SimpleElastix/statismo-build \
      -DELASTIX_USER_COMPONENT_DIRS=$HOME/build/SimpleElastix/statismo-prefix/elastix \
      -DUSE_SimpleStatisticalDeformation=ON 
-RUN make  -j$(grep -c processor /proc/cpuinfo)   
-     
+RUN make  -j$(grep -c processor /proc/cpuinfo)   elastix
+#FROM liviabarazzetti/simpleelastix:ElastixConfig  
+#RUN make  -j$(grep -c processor /proc/cpuinfo)      
 
 
