@@ -46,7 +46,7 @@ RUN  mkdir -p statismo-prefix && \
      
 WORKDIR $HOME/build/SimpleElastix
 #let SimpleElastix superbuild take care of ITK config and dependencies
-RUN cmake $HOME/SuperBuild \
+RUN echo cmake $HOME/SuperBuild \
    		-DBUILD_EXAMPLES=OFF \
    		-DBUILD_TESTING=OFF \
    		-DUSE_SYSTEM_SWIG=ON \
@@ -59,17 +59,18 @@ RUN cmake $HOME/SuperBuild \
    		-DCMAKE_BUILD_TYPE=Release \
    		-DELASTIX_USER_COMPONENT_DIRS=$HOME/build/SimpleElastix/statismo-prefix/elastix
    		
-RUN  make -j$(grep -c processor /proc/cpuinfo) ITK
+RUN  echo make -j$(grep -c processor /proc/cpuinfo) ITK
 
 RUN mkdir -p  statismo-build && \
     cd statismo-build && \
-    cmake ../../statismo-prefix/src \
+    cmake ../statismo-prefix/src \
      -DBUILD_EXAMPLES=OFF \
      -DBUILD_TESTING=OFF \
      -DVTK_SUPPORT=ON \
      -DITK_DIR=$HOME/build/SimpleElastix/ITK-build \
-     -DVTK_SUPPORT=OFF && \
-     make  -j$(grep -c processor /proc/cpuinfo) 
+     -DVTK_SUPPORT=OFF 
 
-RUN make -j$(grep -c processor /proc/cpuinfo) 
+#RUN make  -j$(grep -c processor /proc/cpuinfo) 
+
+#RUN make -j$(grep -c processor /proc/cpuinfo) 
 
