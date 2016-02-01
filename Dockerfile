@@ -68,9 +68,8 @@ RUN mkdir -p  statismo-build && \
      -DBUILD_TESTING=OFF \
      -DVTK_SUPPORT=ON \
      -DITK_DIR=$HOME/build/SimpleElastix/ITK-build \
-     -DVTK_SUPPORT=OFF 
-
-#RUN make  -j$(grep -c processor /proc/cpuinfo) 
+     -DVTK_SUPPORT=OFF && \
+    make  -j$(grep -c processor /proc/cpuinfo) 
 
 #RUN make -j$(grep -c processor /proc/cpuinfo) 
 
