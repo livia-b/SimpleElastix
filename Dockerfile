@@ -38,7 +38,7 @@ RUN mkdir -p $HOME/build/SimpleElastix
 WORKDIR /home/itkuser/build/SimpleElastix
 
 RUN  mkdir -p statismo-prefix && \ 
-    git clone -b develop  https://github.com/statismo/statismo statismo-prefix/src && \
+    git clone -b docker_superbuild  https://github.com/livia-b/statismo.git  statismo-prefix/src && \
     git clone https://github.com/statismo/statismo-elastix statismo-prefix/elastix 
     
 #http://simpleelastix.readthedocs.org/GettingStarted.html
@@ -63,14 +63,12 @@ RUN  make -j$(grep -c processor /proc/cpuinfo) ITK
 
 RUN  mkdir -p  statismo-build && \
     cd  statismo-build && \
-    cmake ../statismo-prefix/src \ 
-   		-DCMAKE_BUILD_TYPE=Release \
-        -DITK_DIR:PATH=$HOME/build/SimpleElastix/ITK-build \
-        -DVTK_SUPPORT:BOOL=OFF  \
-        -DBUILD_EXAMPLES:BOOL=OFF  \
-        -DBUILD_CLI_TOOLS:BOOL=ON && \
-    make -j$(grep -c processor /proc/cpuinfo) 
+    cmake ../statismo-prefix/src/superbuild \ 
+   		-DCMAKE_BUILD_TYPE:STRING=Release \
+	    -DMINIMAL_STATISMO_BUILD:BOOL=ON \
+	    -DITK_DIR=$HOME/build/SimpleElastix/ITK-prefix/build
+        
+#RUN cd  statismo-build && make -j$(grep -c processor /proc/cpuinfo) 
 
-	
-RUN make -j$(grep -c processor /proc/cpuinfo) 
+#RUN make -j$(grep -c processor /proc/cpuinfo) 
 
