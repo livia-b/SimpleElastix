@@ -77,18 +77,18 @@
 #RUN make -j$(grep -c processor /proc/cpuinfo) elastix
 
 #using dockerhub for caching
-FROM liviabarazzetti/simpleelastix:ElastixConfig  
-USER root
-RUN apt-get clean
-USER itkuser
-RUN cd elastix-build && \
-   cmake . \
-     -Dstatismo_DIR=$HOME/build/SimpleElastix/statismo-build \
-     -DELASTIX_USER_COMPONENT_DIRS=$HOME/build/SimpleElastix/statismo-prefix/elastix \
-     -DUSE_SimpleStatisticalDeformation=ON 
-RUN make  -j$(grep -c processor /proc/cpuinfo)   elastix
+#FROM liviabarazzetti/simpleelastix:ElastixConfig  
+#USER root
+#RUN apt-get clean
+#USER itkuser
+#RUN cd elastix-build && \
+#   cmake . \
+#     -Dstatismo_DIR=$HOME/build/SimpleElastix/statismo-build \
+#     -DELASTIX_USER_COMPONENT_DIRS=$HOME/build/SimpleElastix/statismo-prefix/elastix \
+#     -DUSE_SimpleStatisticalDeformation=ON 
+#RUN make  -j$(grep -c processor /proc/cpuinfo)   elastix
 
-#FROM liviabarazzetti/simpleelastix:ElastixBuild
-#RUN make  -j$(grep -c processor /proc/cpuinfo)      
+FROM liviabarazzetti/simpleelastix:ElastixBuild
+RUN make  -j$(grep -c processor /proc/cpuinfo)      
 
 
