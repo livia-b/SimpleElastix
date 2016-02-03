@@ -70,12 +70,12 @@ ExternalProject_Add(${proj}
   -DITK_WRAP_unsigned_char:BOOL=ON
   -DITK_WRAP_signed_short:BOOL=ON
   -DITK_WRAP_unsigned_short:BOOL=ON
-  -DITK_WRAP_complex_float:BOOL=ON
+  -DITK_WRAP_complex_float:BOOL=OFF
   -DITK_WRAP_vector_float:BOOL=ON
-  -DITK_WRAP_covariant_vector_float:BOOL=ON
-  -DITK_WRAP_rgb_signed_short:BOOL=ON
-  -DITK_WRAP_rgb_unsigned_char:BOOL=ON
-  -DITK_WRAP_rgb_unsigned_short:BOOL=ON
+  -DITK_WRAP_covariant_vector_float:BOOL=OFF
+  -DITK_WRAP_rgb_signed_short:BOOL=OFF
+  -DITK_WRAP_rgb_unsigned_char:BOOL=OFF
+  -DITK_WRAP_rgb_unsigned_short:BOOL=OFF
   -DITK_WRAP_PYTHON:BOOL=${ITK_WRAPPING}
   -DITK_USE_SYSTEM_HDF5:BOOL=ON
   -DHDF5_DIR:PATH=${HDF5_DIR}
